@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar Certificados - Red Innovations</title>
+    <style>
+        /* Seu CSS original permanece intacto */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Fira Code', 'JetBrains Mono', 'Ubuntu Mono', 'DejaVu Sans Mono', monospace;
+        }
+        /* ... (o restante do CSS permanece igual) ... */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo" onclick="window.location.href='/'">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#00ff88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 17L12 22L22 17" stroke="#00ff88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 12L12 17L22 12" stroke="#00ff88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Red Innovations
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/cursos">Cursos</a></li>
+                    <li><a href="/verificar" class="active">Verificação</a></li>
+                    <li><a href="#">Contato</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <div class="terminal-buttons">
+                    <div class="terminal-button button-close"></div>
+                    <div class="terminal-button button-minimize"></div>
+                    <div class="terminal-button button-maximize"></div>
+                </div>
+                <div class="terminal-title">user@linux: ~/verificar-certificado</div>
+            </div>
+            
+            <div class="terminal-body">
+                <div class="command-input">
+                    <div class="prompt">
+                        <span class="prompt-user">user@linux</span><span class="prompt-at">@</span><span class="prompt-host">host</span><span class="prompt-dir">:~/verificar-certificado</span><span class="prompt-symbol">$</span>
+                    </div>
+                    <input type="text" id="certificateId" placeholder=" Digite o ID do certificado" autofocus>
+                    <button onclick="verificarCertificado()">Verificar</button>
+                </div>
+                
+                <div id="resultado" class="result-area">
+                    <div id="placeholderText">
+                        <span class="prompt-symbol">[INFO]</span> Digite o ID do certificado e clique em Verificar.
+                        <div style="margin-top: 10px; color: #94a3b8;">
+                            <span class="prompt-symbol">[EXEMPLO]</span> IDs válidos: LINUX2025-001 a LINUX2025-010
+                        </div>
+                    </div>
+                    <div id="certificateResult" class="certificate-info">
+                        <div id="resultIcon" class="success-icon"></div>
+                        <div id="resultText"></div>
+                        <div id="certDetails" class="cert-details"></div>
+                        <div id="actionButtons" class="action-buttons"></div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <div class="prompt">
+                        <span class="prompt-user">user@linux</span><span class="prompt-at">@</span><span class="prompt-host">host</span><span class="prompt-dir">:~/verificar-certificado</span><span class="prompt-symbol">$</span>
+                    </div>
+                    <div style="color: #94a3b8; margin-top: 5px;">
+                        <span class="prompt-symbol">[DICA]</span> Após verificação, você poderá baixar o certificado em PDF
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="download-info">
+            <h4>Como baixar seu certificado:</h4>
+            <ol class="download-steps">
+                <li>Digite o ID do seu certificado no campo acima (ex: LINUX2025-001)</li>
+                <li>Clique em "Verificar" para validar seu certificado</li>
+                <li>Após a verificação, aparecerá um botão "Baixar PDF"</li>
+                <li>Clique em "Baixar PDF" para salvar o certificado em seu computador</li>
+            </ol>
+        </div>
+        
+        <footer>
+            <p>Red Innovations &copy; 2025 - Sistema de Verificação de Certificados</p>
+            <p>Curso de Linux - 20 horas - Modalidade Online - Instrutor: José Moraes</p>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <span>contato@redinnovations.com</span>
+                </div>
+                <div class="contact-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                    <span>(11) 99999-9999</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // URL base da API
+        const API_BASE = 'http://localhost:3001/api';
+        
+        // Verificar certificado
+        async function verificarCertificado() {
+            const certId = document.getElementById('certificateId').value.trim().toUpperCase();
+            const resultado = document.getElementById('certificateResult');
+            const resultadoTexto = document.getElementById('resultText');
+            const resultadoIcon = document.getElementById('resultIcon');
+            const detalhesCert = document.getElementById('certDetails');
+            const botoesAcao = document.getElementById('actionButtons');
+            const placeholder = document.getElementById('placeholderText');
+            
+            placeholder.style.display = 'none';
+            
+            if (!certId) {
+                mostrarResultado('error', 'Por favor, digite um ID de certificado.');
+                return;
+            }
+            
+            try {
+                const botaoVerificar = document.querySelector('button');
+                const textoOriginal = botaoVerificar.textContent;
+                botaoVerificar.innerHTML = 'Verificando... <span class="loading" style="width: 12px; height: 12px;"></span>';
+                
+                const response = await fetch(`${API_BASE}/certificates/certificate/${certId}`);
+                
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error('Certificado não encontrado');
+                    } else {
+                        throw new Error('Erro ao buscar certificado');
+                    }
+                }
+                
+                const certificado = await response.json();
+                
+                resultado.className = 'certificate-info valid';
+                resultadoIcon.innerHTML = '✅';
+                resultadoTexto.innerHTML = `Certificado <strong>VÁLIDO</strong> verificado com sucesso!`;
+                
+                detalhesCert.innerHTML = `
+                    <p><span>Nome:</span> ${certificado.participant_name}</p>
+                    <p><span>Curso:</span> ${certificado.course_name}</p>
+                    <p><span>Data de conclusão:</span> ${formatarData(certificado.completion_date)}</p>
+                    <p><span>Carga horária:</span> ${certificado.hours} horas</p>
+                    <p><span>Modalidade:</span> ${certificado.modalidade}</p>
+                    <p><span>Organização:</span> ${certificado.organizacao}</p>
+                    <p><span>Instrutor:</span> ${certificado.instrutor}</p>
+                    <p><span>Diretor:</span> ${certificado.diretor}</p>
+                    <div class="hash-code">Hash: ${certificado.hash_verificacao}</div>
+                `;
+                
+                botoesAcao.innerHTML = `
+                    <button onclick="baixarCertificado('${certId}')">Baixar PDF</button>
+                    <button onclick="visualizarCertificado('${certId}')" class="secondary">Visualizar</button>
+                `;
+                
+                resultado.style.display = 'block';
+                botaoVerificar.textContent = textoOriginal;
+                
+            } catch (error) {
+                resultado.className = 'certificate-info invalid';
+                resultadoIcon.innerHTML = '❌';
+                resultadoTexto.innerHTML = `Erro: ${error.message}`;
+                detalhesCert.innerHTML = `<p>Verifique se o ID está correto e tente novamente.</p>`;
+                botoesAcao.innerHTML = '';
+                resultado.style.display = 'block';
+                
+                const botaoVerificar = document.querySelector('button');
+                botaoVerificar.textContent = 'Verificar';
+            }
+        }
+        
+        // Baixar certificado
+        async function baixarCertificado(certId) {
+            try {
+                const botao = document.querySelector('#actionButtons button');
+                const textoOriginal = botao.textContent;
+                botao.innerHTML = 'Baixando... <span class="loading" style="width: 12px; height: 12px;"></span>';
+                
+                const response = await fetch(`${API_BASE}/certificates/generate/${certId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/pdf'
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Falha ao baixar o PDF');
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `certificado-${certId}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+
+                setTimeout(() => {
+                    botao.textContent = textoOriginal;
+                }, 3001);
+                
+            } catch (error) {
+                alert(`Erro ao baixar certificado: ${error.message}`);
+                const botao = document.querySelector('#actionButtons button');
+                botao.textContent = 'Baixar PDF';
+            }
+        }
+        
+        // Visualizar certificado
+        function visualizarCertificado(certId) {
+            window.open(`${API_BASE}/certificates/generate/${certId}`, '_blank');
+        }
+        
+        // Formatar data
+        function formatarData(dataString) {
+            const data = new Date(dataString);
+            return data.toLocaleDateString('pt-BR');
+        }
+        
+        // Mostrar resultado
+        function mostrarResultado(tipo, mensagem) {
+            const resultado = document.getElementById('certificateResult');
+            const resultadoTexto = document.getElementById('resultText');
+            const resultadoIcon = document.getElementById('resultIcon');
+            const detalhesCert = document.getElementById('certDetails');
+            const botoesAcao = document.getElementById('actionButtons');
+            const placeholder = document.getElementById('placeholderText');
+            
+            placeholder.style.display = 'none';
+            resultado.className = 'certificate-info invalid';
+            
+            if (tipo === 'error') {
+                resultadoIcon.innerHTML = '❌';
+            } else {
+                resultadoIcon.innerHTML = '⚠️';
+            }
+            
+            resultadoTexto.innerHTML = mensagem;
+            detalhesCert.innerHTML = '';
+            botoesAcao.innerHTML = '';
+            resultado.style.display = 'block';
+        }
+        
+        // Permitir verificação ao pressionar Enter
+        document.getElementById('certificateId').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                verificarCertificado();
+            }
+        });
+        
+        // Verificar se há parâmetro na URL
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const certificateId = urlParams.get('certificate');
+            
+            if (certificateId) {
+                document.getElementById('certificateId').value = certificateId;
+                verificarCertificado();
+            }
+        });
+    </script>
+</body>
+</html>
