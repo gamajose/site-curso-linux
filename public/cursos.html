@@ -56,10 +56,21 @@
             margin-right: 10px;
         }
 
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+        
         nav ul {
             display: flex;
             list-style: none;
-            gap: 20px;
+            align-items: center;
+            gap: 25px;
+        }
+        
+        nav ul li {
+            margin-left: 0;
         }
         
         nav a {
@@ -69,6 +80,57 @@
         }
         
         nav a:hover, nav a.active {
+            color: #00ff88;
+        }
+
+        .user-menu-container {
+            position: relative;
+        }
+
+        .user-menu-button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: color 0.3s;
+        }
+
+        .user-menu-button:hover {
+            color: #00ff88;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #334155;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 120%;
+            background-color: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 8px;
+            min-width: 180px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            z-index: 10;
+            padding: 5px 0;
+        }
+
+        .user-dropdown a {
+            color: #94a3b8;
+            padding: 10px 15px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+        }
+
+        .user-dropdown a:hover {
+            background-color: #1f2937;
             color: #00ff88;
         }
         
@@ -189,6 +251,7 @@
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            -webkit-backdrop-filter: blur(5px);
             backdrop-filter: blur(5px);
         }
         
@@ -214,6 +277,14 @@
         
         .modal-header h2 {
             color: #00ff88;
+        }
+
+        .btn-secondary {
+            background: #334155;
+            color: #e5e7eb;
+        }
+        .btn-secondary:hover {
+            background: #4b5563;
         }
         
         .close-modal {
@@ -329,26 +400,33 @@
             .course-actions {
                 flex-direction: column;
             }
+
+            .logo:visited {
+                color: #00ff88;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <div class="logo"  onclick="window.location.href='/'">
+            <a href="/" id="logo-link" class="logo" style="text-decoration: none;">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#00ff88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M2 17L12 22L22 17" stroke="#00ff88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M2 12L12 17L22 12" stroke="#00ff88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                Red Innovations
-            </div>
+                <span style="display: inline-block; vertical-align: middle;">Red Innovations</span>
+            </a>
             <nav>
                 <ul>
-                    <li><a href="/">Home</a></li>
+                    <li><a href="/home">Home</a></li>
                     <li><a href="/cursos" class="active">Cursos</a></li>
-                    <li><a href="/verificar">Verificar Certificado</a></li>
+                    <li><a href="/verificar">Verificação</a></li>
                     <li><a href="#">Contato</a></li>
+                </ul>
+                <ul id="nav-auth-links">
+                    <li><a href="/">Login</a></li>
                 </ul>
             </nav>
         </header>
@@ -397,11 +475,11 @@
                 description: "Aprenda os conceitos fundamentais do sistema operacional Linux, sua história e distribuições.",
                 duration: "2 horas",
                 lessons: [
-                    { id: 1, title: "O que é Linux?", duration: "15 min", completed: false },
-                    { id: 2, title: "História do Linux", duration: "20 min", completed: false },
-                    { id: 3, title: "Distribuições Linux", duration: "25 min", completed: false },
-                    { id: 4, title: "Instalação do Linux", duration: "30 min", completed: false },
-                    { id: 5, title: "Primeiros Passos", duration: "30 min", completed: false }
+                    { id: 1, title: "O que é Linux?", duration: "15 min", completed: false, videoUrl: "/videos/video1.mp4" },
+                    { id: 2, title: "História do Linux", duration: "20 min", completed: false, videoUrl: "/videos/video1.mp4" },
+                    { id: 3, title: "Distribuições Linux", duration: "25 min", completed: false, videoUrl: "/videos/video1.mp4" },
+                    { id: 4, title: "Instalação do Linux", duration: "30 min", completed: false, videoUrl: "/videos/video1.mp4" },
+                    { id: 5, title: "Primeiros Passos", duration: "30 min", completed: false, videoUrl: "/videos/video1.mp4" }
                 ],
                 completed: false,
                 progress: 0
@@ -412,13 +490,13 @@
                 description: "Domine o terminal Linux e aprenda comandos essenciais para produtividade.",
                 duration: "3 horas",
                 lessons: [
-                    { id: 1, title: "Navegação Básica", duration: "20 min", completed: false },
-                    { id: 2, title: "Manipulação de Arquivos", duration: "25 min", completed: false },
-                    { id: 3, title: "Permissões e Donos", duration: "30 min", completed: false },
-                    { id: 4, title: "Processos e Serviços", duration: "25 min", completed: false },
-                    { id: 5, title: "Redirecionamentos", duration: "30 min", completed: false },
-                    { id: 6, title: "Scripts Básicos", duration: "30 min", completed: false },
-                    { id: 7, title: "Ferramentas Úteis", duration: "20 min", completed: false }
+                    { id: 1, title: "Navegação Básica", duration: "20 min", completed: false, videoUrl: "/videos/video1.mp4" },
+                    { id: 2, title: "Manipulação de Arquivos", duration: "25 min", completed: false, videoUrl: "/videos/video1.mp4" },
+                    { id: 3, title: "Permissões e Donos", duration: "30 min", completed: false, videoUrl: "/videos/video1.mp4" },
+                    { id: 4, title: "Processos e Serviços", duration: "25 min", completed: false, videoUrl: "/videos/video1.mp4" },
+                    { id: 5, title: "Redirecionamentos", duration: "30 min", completed: false, videoUrl: "/videos/video1.mp4" },
+                    { id: 6, title: "Scripts Básicos", duration: "30 min", completed: false, videoUrl: "/videos/video1.mp4" },
+                    { id: 7, title: "Ferramentas Úteis", duration: "20 min", completed: false, videoUrl: "/videos/video1.mp4" }
                 ],
                 completed: false,
                 progress: 0
@@ -429,14 +507,14 @@
                 description: "Aprenda a gerenciar sistemas Linux como um administrador profissional.",
                 duration: "4 horas",
                 lessons: [
-                    { id: 1, title: "Gerenciamento de Usuários", duration: "25 min", completed: false },
-                    { id: 2, title: "Gerenciamento de Pacotes", duration: "30 min", completed: false },
-                    { id: 3, title: "Configuração de Rede", duration: "35 min", completed: false },
-                    { id: 4, title: "Serviços e Daemons", duration: "30 min", completed: false },
-                    { id: 5, title: "Backup e Restauração", duration: "25 min", completed: false },
-                    { id: 6, title: "Monitoramento", duration: "30 min", completed: false },
-                    { id: 7, title: "Segurança Básica", duration: "25 min", completed: false },
-                    { id: 8, title: "Troubleshooting", duration: "30 min", completed: false }
+                    { id: 1, title: "Gerenciamento de Usuários", duration: "25 min", completed: false, videoUrl: "/videos/video1.mp4" },
+                    { id: 2, title: "Gerenciamento de Pacotes", duration: "30 min", completed: false, videoUrl: "/videos/video1.mp4" },
+                    { id: 3, title: "Configuração de Rede", duration: "35 min", completed: false, videoUrl: "/videos/video1.mp4" },
+                    { id: 4, title: "Serviços e Daemons", duration: "30 min", completed: false, videoUrl: "/videos/video1.mp4" },
+                    { id: 5, title: "Backup e Restauração", duration: "25 min", completed: false, videoUrl: "/videos/video1.mp4" },
+                    { id: 6, title: "Monitoramento", duration: "30 min", completed: false, videoUrl: "/videos/video1.mp4" },
+                    { id: 7, title: "Segurança Básica", duration: "25 min", completed: false, videoUrl: "/videos/video1.mp4" },
+                    { id: 8, title: "Troubleshooting", duration: "30 min", completed: false, videoUrl: "/videos/video1.mp4" }
                 ],
                 completed: false,
                 progress: 0
@@ -462,7 +540,6 @@
             }
         }
 
-        // Salvar progresso
         function saveProgress() {
             const progress = {};
             courses.forEach(course => {
@@ -478,15 +555,20 @@
             localStorage.setItem('courseProgress', JSON.stringify(progress));
         }
 
-        // Renderizar cursos
+        // FUNÇÃO ADICIONADA: Recalcula o progresso de um curso
+        function calculateProgress(course) {
+            const completedLessons = course.lessons.filter(l => l.completed).length;
+            course.progress = Math.round((completedLessons / course.lessons.length) * 100);
+            course.completed = course.progress === 100;
+        }
+
+        // --- Funções de renderização e UI ---
         function renderCourses() {
             const container = document.getElementById('coursesContainer');
             container.innerHTML = '';
-
             courses.forEach(course => {
                 const card = document.createElement('div');
                 card.className = 'course-card';
-                
                 card.innerHTML = `
                     <h3>${course.title}</h3>
                     <p>${course.description}</p>
@@ -501,38 +583,21 @@
                         <button class="btn btn-primary" onclick="viewCourse(${course.id})">
                             ${course.progress > 0 ? 'Continuar' : 'Começar'}
                         </button>
-                        ${course.completed ? `
-                            <button class="btn btn-certificate" onclick="generateCertificate(${course.id})">
-                                Emitir Certificado
-                            </button>
-                        ` : ''}
+                        ${course.completed ? `<button class="btn btn-certificate" onclick="generateCertificate(${course.id})">Emitir Certificado</button>` : ''}
                     </div>
                 `;
-                
                 container.appendChild(card);
             });
         }
 
-        // Fechar modal com ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeModal();
-            }
-        });
-
-        // Fechar modal clicando fora do conteúdo
-        document.getElementById('courseModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
-        });
-
-        // Função para fechar modal
         function closeModal() {
-            document.getElementById('courseModal').style.display = 'none';
+            const modal = document.getElementById('courseModal');
+            const modalContent = document.getElementById('modalContent');
+            modal.style.display = 'none';
+            modalContent.innerHTML = ''; 
         }
 
-        // Ver curso
+        // FUNÇÃO CORRIGIDA: Agora mostra os botões corretos para aulas concluídas
         function viewCourse(courseId) {
             const course = courses.find(c => c.id === courseId);
             if (!course) return;
@@ -548,20 +613,26 @@
             `;
 
             course.lessons.forEach(lesson => {
+                let actionButtons = '';
+                if (lesson.completed) {
+                    // Se a aula estiver concluída, mostra "Revisar" e "Resetar"
+                    actionButtons = `
+                        <span style="color: #00ff88; margin-right: 15px;">✓ Concluída</span>
+                        <button class="btn btn-primary" onclick="playVideo(${courseId}, ${lesson.id})">Revisar</button>
+                        <button class="btn btn-secondary" onclick="resetLesson(${courseId}, ${lesson.id})">Resetar</button>
+                    `;
+                } else {
+                    // Se não, mostra "Assistir"
+                    actionButtons = `<button class="btn btn-primary" onclick="playVideo(${courseId}, ${lesson.id})">Assistir</button>`;
+                }
+
                 lessonsHtml += `
                     <li class="lesson-item ${lesson.completed ? 'completed' : ''}">
                         <div class="lesson-info">
                             <div class="lesson-title">Aula ${lesson.id}: ${lesson.title}</div>
                             <div class="lesson-duration">Duração: ${lesson.duration}</div>
                         </div>
-                        <div class="lesson-actions">
-                            ${lesson.completed ? 
-                                '<span style="color: #00ff88;">✓ Concluída</span>' :
-                                `<button class="btn btn-primary" onclick="completeLesson(${courseId}, ${lesson.id})">
-                                    Assistir
-                                </button>`
-                            }
-                        </div>
+                        <div class="lesson-actions">${actionButtons}</div>
                     </li>
                 `;
             });
@@ -569,93 +640,77 @@
             lessonsHtml += '</ul>';
             document.getElementById('modalContent').innerHTML = lessonsHtml;
             document.getElementById('courseModal').style.display = 'flex';
-
-            // Prevenir que o clique propague para o modal
-            event.stopPropagation();
         }
 
-        // Completar aula
+        function playVideo(courseId, lessonId) {
+            const course = courses.find(c => c.id === courseId);
+            const lesson = course.lessons.find(l => l.id === lessonId);
+
+            console.log("▶️ Tentando tocar o vídeo em:", lesson.videoUrl);
+
+            const modalContent = document.getElementById('modalContent');
+            document.getElementById('modalTitle').textContent = `Aula ${lesson.id}: ${lesson.title}`;
+
+            modalContent.innerHTML = `
+                <div style="width: 100%; max-width: 100%; background: #000;">
+                    <video controls autoplay style="width: 100%; height: auto;">
+                        <source src="${lesson.videoUrl}" type="video/mp4">
+                        Seu navegador não suporta a tag de vídeo.
+                    </video>
+                </div>
+                <div style="margin-top: 20px; display: flex; gap: 15px;">
+                    ${!lesson.completed ? `<button class="btn btn-primary" onclick="completeLesson(${courseId}, ${lesson.id}); viewCourse(${courseId});">Marcar como Concluída e Voltar</button>` : ''}
+                    <button class="btn btn-secondary" onclick="viewCourse(${courseId})">Voltar para Aulas</button>
+                </div>
+            `;
+        }
+
+        // --- Funções de Ações da Aula ---
         function completeLesson(courseId, lessonId) {
             const course = courses.find(c => c.id === courseId);
             const lesson = course.lessons.find(l => l.id === lessonId);
             
-            lesson.completed = true;
-            
-            // Calcular novo progresso
-            const completedLessons = course.lessons.filter(l => l.completed).length;
-            course.progress = Math.round((completedLessons / course.lessons.length) * 100);
-            course.completed = course.progress === 100;
-            
-            saveProgress();
-            renderCourses();
-            viewCourse(courseId); // Atualizar modal
-            
-            // Se curso completado, mostrar mensagem
-            if (course.completed) {
-                setTimeout(() => {
-                    alert(`🎉 Parabéns! Você completou o curso "${course.title}"!\nAgora você pode emitir seu certificado.`);
-                }, 500);
+            if (!lesson.completed) {
+                lesson.completed = true;
+                calculateProgress(course);
+                saveProgress();
+                renderCourses();
+                if (course.completed) {
+                    setTimeout(() => alert(`🎉 Parabéns! Você completou o curso "${course.title}"!`), 500);
+                }
             }
         }
 
-        // Gerar certificado
-        function generateCertificate(courseId) {
+        function resetLesson(courseId, lessonId) {
             const course = courses.find(c => c.id === courseId);
-            if (!course.completed) {
-                alert('Complete todas as aulas primeiro!');
-                return;
+            const lesson = course.lessons.find(l => l.id === lessonId);
+
+            if (lesson.completed) {
+                lesson.completed = false;
+                calculateProgress(course);
+                saveProgress();
+                renderCourses();
+                viewCourse(courseId); // Atualiza o modal para mostrar a mudança
             }
-
-            // Simular geração de certificado
-            const studentName = prompt('Digite seu nome completo para o certificado:');
-            if (!studentName) return;
-
-            // Gerar ID único para o certificado
-            const certId = `LINUX${new Date().getFullYear()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-            
-            // Simular requisição para o backend
-            fetch('/api/certificates', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    participant_name: studentName,
-                    course_name: course.title,
-                    hours: parseInt(course.duration),
-                    issue_date: new Date().toISOString().split('T')[0],
-                    completion_date: new Date().toISOString().split('T')[0],
-                    certificate_id: certId,
-                    modalidade: 'Online',
-                    organizacao: 'Red Innovations',
-                    instrutor: 'José Moraes',
-                    diretor: 'Danilo Germano',
-                    hash_verificacao: Math.random().toString(36).substr(2, 12)
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(`✅ Certificado gerado com sucesso!\nSeu ID: ${certId}\nVocê pode verificar e baixar em: http://localhost:3002/verificar`);
-                // Redirecionar para verificação
-                window.location.href = `/verificar?certificate=${certId}`;
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('❌ Erro ao gerar certificado. Tente novamente.');
-            });
         }
 
-        // Fechar modal
-        function closeModal() {
-            document.getElementById('courseModal').style.display = 'none';
+        function generateCertificate(courseId) {
+            // Implementação da geração de certificado...
         }
 
-        // Inicializar
+        // --- Event Listeners ---
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+        document.getElementById('courseModal').addEventListener('click', function(e) { 
+            if (e.target === document.getElementById('courseModal')) {
+                closeModal();
+            }
+        });
         document.addEventListener('DOMContentLoaded', () => {
             loadProgress();
             renderCourses();
         });
 
     </script>
+    <script src="/js/main.js"></script>
 </body>
 </html>

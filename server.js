@@ -2,18 +2,33 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const app = express();
 const certificateRoutes = require('./src/routes/certificates');
-const PDFService = require('./src/services/pdfService');
-const http = require('http');
+const authRoutes = require('./src/routes/auth');
+const userRoutes = require('./src/routes/users');
+
+// Configure CORS
+const corsOptions = {
+    origin: [
+        'https://academyz.com.br',
+        'https://www.academyz.com.br'
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    credentials: true
+};
 
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 // Rotas
 app.use('/api/certificates', certificateRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 // Rota de saúde
 app.get('/health', (req, res) => {
@@ -25,42 +40,29 @@ app.get('/health', (req, res) => {
     });
 });
 
-// API de cursos
-app.get('/api/courses', (req, res) => {
-    res.json([
-        {
-            id: 1,
-            title: "Introdução ao Linux",
-            description: "Conceitos básicos do sistema operacional Linux",
-            duration: "2 horas",
-            lessons: 5,
-            completed: false,
-            progress: 0
-        },
-        {
-            id: 2,
-            title: "Comandos Terminal",
-            description: "Domine o terminal Linux como um profissional",
-            duration: "3 horas",
-            lessons: 7,
-            completed: false,
-            progress: 0
-        },
-        {
-            id: 3,
-            title: "Administração Linux",
-            description: "Gerencie sistemas Linux com eficiência",
-            duration: "4 horas",
-            lessons: 8,
-            completed: false,
-            progress: 0
-        }
-    ]);
-});
+
+// Handle preflight requests
+app.options('*', cors(corsOptions));
 
 // Servir páginas diferentes
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+app.get('/register', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'register.html'));
+});
+
+app.get('/recover', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'recover.html'));
+});
+    
+app.get('/reset', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'reset-password.html'));
+});
+
+app.get('/home', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'home.html'));
 });
 
 app.get('/verificar', (req, res) => {
@@ -71,72 +73,56 @@ app.get('/cursos', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'cursos.html'));
 });
 
+app.get('/profile', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'profile.html'));
+});
+
+app.get('/profile', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'profile.html'));
+});
+
+app.get('/change-password', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'change-password.html'));
+});
+
 // Inicialização do servidor
 const PORT = process.env.PORT || 3001;
-
-// Testar conexão com banco primeiro
 const pool = require('./src/config/database');
 
 async function startServer() {
     try {
-        // Testar conexão com PostgreSQL
         const client = await pool.connect();
         console.log('✅ Conectado ao PostgreSQL com sucesso!');
         client.release();
         
-        // Iniciar servidor
+        const templatePath = path.join(__dirname, 'certificates', 'templates', 'certificado-template.svg');
+        if (fs.existsSync(templatePath)) {
+            console.log('✅ Template encontrado em:', templatePath);
+        } else {
+            console.warn('⚠️ Template não encontrado em:', templatePath);
+        }
+        
         const server = app.listen(PORT, () => {
             console.log(`✅ Servidor rodando na porta ${PORT}`);
             console.log(`📍 Acesse: http://localhost:${PORT}`);
-            console.log(`📍 API Health: http://localhost:${PORT}/health`);
         });
 
-        // Graceful shutdown
-        process.on('SIGINT', async () => {
-            console.log('\n🛑 Desligando servidor gracefully...');
-            
-            try {
-                await PDFService.cleanup();
-                console.log('✅ Serviço PDF limpo');
-            } catch (error) {
-                console.error('❌ Erro ao limpar PDF service:', error);
-            }
-            
+        // Desligamento limpo do servidor (sem referências a serviços)
+        const shutdown = () => {
+            console.log('\n🛑 Desligando servidor...');
             server.close(() => {
                 console.log('✅ Servidor desligado');
                 process.exit(0);
             });
-        });
+        };
 
-        process.on('SIGTERM', async () => {
-            console.log('\n🛑 Recebido SIGTERM, desligando gracefully...');
-            
-            try {
-                await PDFService.cleanup();
-                console.log('✅ Serviço PDF limpo');
-            } catch (error) {
-                console.error('❌ Erro ao limpar PDF service:', error);
-            }
-            
-            server.close(() => {
-                console.log('✅ Servidor desligado');
-                process.exit(0);
-            });
-        });
+        process.on('SIGINT', shutdown);
+        process.on('SIGTERM', shutdown);
+
     } catch (error) {
-        console.error('❌ Erro ao conectar ao PostgreSQL:', error);
-        process.exit(1); // Encerrar o processo em caso de falha na conexão
+        console.error('❌ Erro ao iniciar o servidor:', error.message, error.stack);
+        process.exit(1);
     }
 }
-// Inicializar servidor
+
 startServer();
-
-// Tratamento de erros não capturados
-process.on('uncaughtException', (error) => {
-    console.error('❌ Erro não capturado:', error);
-    // Não sair imediatamente, deixar o servidor tentar se recuperar
-});
-
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('❌ Promise rejeitada não tratada:', reason);
-});
