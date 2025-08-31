@@ -8,11 +8,16 @@ const certificateRoutes = require('./src/routes/certificates');
 const authRoutes = require('./src/routes/auth');
 const userRoutes = require('./src/routes/users');
 
+app.set('trust proxy', 1);
+
 // Configure CORS
 const corsOptions = {
     origin: [
         'https://academyz.com.br',
-        'https://www.academyz.com.br'
+        'https://www.academyz.com.br',
+        'http://academyz.com.br',
+        'http://www.academyz.com.br',
+        'http://localhost:3001',
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
@@ -104,7 +109,7 @@ async function startServer() {
         
         const server = app.listen(PORT, () => {
             console.log(`✅ Servidor rodando na porta ${PORT}`);
-            console.log(`📍 Acesse: http://localhost:${PORT}`);
+            console.log(`📍 Acesse: http://academyz.com.br:${PORT}`);
         });
 
         // Desligamento limpo do servidor (sem referências a serviços)
